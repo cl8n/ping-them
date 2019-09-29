@@ -39,7 +39,10 @@ function sendMessage(url, message, name) {
     if (name !== undefined)
         data.username = name;
 
-    const request = https.request(url, { method: 'POST' });
+    const request = https.request(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    });
     request.on('error', err => { throw err; });
     request.write(JSON.stringify(data));
     request.end();

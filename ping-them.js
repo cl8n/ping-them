@@ -60,7 +60,7 @@ function falsyCoalesce(...args) {
 
 const now = new Date();
 
-for (let [webhook, options] of Object.entries(config)) {
+for (let [webhook, options] of Object.entries(config.webhooks)) {
     const scheduleBegin = new Date(parseInt(options.begin) * 1000);
     const dayDifference = getDayDifference(scheduleBegin, now);
 

@@ -62,7 +62,11 @@ const now = new Date();
 
 for (let [webhook, options] of Object.entries(config)) {
     const scheduleBegin = new Date(parseInt(options.begin) * 1000);
-    const dayDifference = getDayDifference(now, scheduleBegin);
+    const dayDifference = getDayDifference(scheduleBegin, now);
+
+    if (dayDifference < 0)
+        continue;
+
     const ping = options.pings[dayDifference % parseInt(options.every)];
 
     sendMessage(

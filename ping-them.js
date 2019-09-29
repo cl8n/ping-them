@@ -9,10 +9,7 @@ const https = require('https');
  * @param {Date} end Ending date.
  */
 function getDayDifference(begin, end) {
-    const beginUtc = Date.UTC(begin.getFullYear(), begin.getMonth(), begin.getDate());
-    const endUtc = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate());
-
-    return Math.floor((endUtc - beginUtc) / getDayDifference.msPerDay);
+    return Math.floor((end.getTime() - begin.getTime()) / getDayDifference.msPerDay);
 }
 getDayDifference.msPerDay = 1000 * 60 * 60 * 24;
 

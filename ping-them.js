@@ -17,14 +17,18 @@ function getDayDifference(begin, end) {
 getDayDifference.msPerDay = 1000 * 60 * 60 * 24;
 
 /**
- * Formats Discord usernames into message tags.
+ * Formats Discord usernames into a message prefix.
  * @param {Array<string>} users Discord usernames to format.
- * @returns {string} Formatted message.
+ * @returns {string} Formatted message prefix.
  */
-function formatUsers(users) {
+function formatPrefix(users) {
+    if (!Array.isArray(users) || users.length === 0)
+        return '';
+
     return users
         .reduce((message, current) => message + `<@${config.users[current]}>, `, '')
-        .slice(0, -2);
+        .slice(0, -2)
+        + ': ';
 }
 
 /**
@@ -45,12 +49,12 @@ function sendMessage(url, message, name) {
 }
 
 /**
- * Gets the first non-empty argument.
+ * Gets the first truthy argument.
  * @param {...any} args
  */
-function emptyCoalesce(...args) {
+function falsyCoalesce(...args) {
     for (let arg of args)
-        if (arg !== undefined || arg !== null || arg !== '')
+        if (arg)
             return arg;
 }
 
@@ -60,13 +64,10 @@ for (let [webhook, options] of Object.entries(config)) {
     const scheduleBegin = new Date(parseInt(options.begin) * 1000);
     const dayDifference = getDayDifference(now, scheduleBegin);
     const ping = options.pings[dayDifference % parseInt(options.every)];
-    const messagePrefix = (ping.users === undefined || ping.users.length === 0)
-        ? ''
-        : formatUsers(ping.users) + ': ';
 
     sendMessage(
         webhook,
-        messagePrefix + ping.message,
-        emptyCoalesce(ping.name, options.name)
+        formatPrefix(ping.users) + ping.message,
+        falsyCoalesce(ping.name, options.name)
     );
 }

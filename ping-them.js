@@ -69,6 +69,9 @@ for (let [webhook, options] of Object.entries(config.webhooks)) {
 
     const ping = options.pings[dayDifference % parseInt(options.every)];
 
+    if (ping === undefined)
+        continue;
+
     sendMessage(
         webhook,
         formatPrefix(ping.users) + ping.message,
